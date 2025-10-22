@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor con Hosting Propio</title>
+    <style> 
+        /* Estilos para que el iframe ocupe toda la pantalla sin bordes */
+        body { margin: 0; padding: 0; overflow: hidden; } 
+        iframe { width: 100%; height: 100vh; border: none; } 
+    </style>
+</head>
+<body>
+
+    <iframe id="miVisor" src="about:blank"></iframe>
+
+    <script>
+        const miVisor = document.getElementById('miVisor');
+        let urlQueSeMuestraActualmente = ''; // Variable para evitar recargas innecesarias
+
+        // Esta función se conecta a 'obtener_url.php' para traer la última URL guardada
+        function consultarUrlAlServidor() {
+            // Usamos 'fetch' para "preguntarle" al servidor por la URL.
+            // Añadimos un truco para evitar la caché del navegador.
+            fetch('obtener_url.php?cachebuster=' + new Date().getTime())
+                .then(response => response.text()) // Convertimos la respuesta en texto
+                .then(urlDelServidor => {
+                    
+                    // Comparamos la URL del servidor con la que ya estamos mostrando
+                    if (urlDelServidor && urlDelServidor !== urlQueSeMuestraActualmente) {
+                        console.log("URL nueva recibida desde el servidor: " + urlDelServidor);
+                        
+                        // Actualizamos la variable con la nueva URL
+                        urlQueSeMuestraActualmente = urlDelServidor;
+                        
+                        // Preparamos la URL para que sea válida (agregando https://)
+                        let urlCompleta = urlDelServidor;
+                        if (!urlCompleta.startsWith('http')) {
+                            urlCompleta = 'https://' + urlCompleta;
+                        }
+                        
+                        // Finalmente, cambiamos la página que muestra el iframe
+                        miVisor.src = urlCompleta;
+                    }
+                })
+                .catch(error => console.error('Error al consultar la URL:', error));
+        }
+
+        // --- El Motor Principal ---
+        // Le decimos al navegador que ejecute la función 'consultarUrlAlServidor' 
+        // repetidamente cada 2 segundos (2000 milisegundos).
+        setInterval(consultarUrlAlServidor, 2000);
+
+        // Hacemos una primera consulta inmediata al cargar la página,
+        // para no tener que esperar 2 segundos la primera vez.
+        consultarUrlAlServidor();
+    </script>
+</body>
+</html>

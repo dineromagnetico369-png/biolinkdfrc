@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control con Hosting Propio</title>
+</head>
+<body>
+    <h1>Indexador (en tu Hosting)</h1>
+    <p>Escribe la URL que quieres mostrar en el visor.</p>
+    <input type="text" id="dominioInput" placeholder="ej: wikipedia.org" style="width: 80%; padding: 10px;">
+    <p id="status"></p>
+
+    <script>
+        const dominioInput = document.getElementById('dominioInput');
+        const statusMsg = document.getElementById('status');
+        let debounceTimer;
+
+        dominioInput.addEventListener('input', () => {
+            // Usamos un "debounce" para no saturar el servidor con cada tecla
+            clearTimeout(debounceTimer);
+            
+            debounceTimer = setTimeout(() => {
+                const dominio = dominioInput.value.trim();
+                
+                // Usamos la API 'fetch' para enviar los datos al servidor
+                fetch('guardar_url.php', {
+                    method: 'POST', // Método para enviar datos
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'url=' + encodeURIComponent(dominio) // El dato que enviamos
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log('Respuesta del servidor:', data);
+                    statusMsg.textContent = 'URL enviada correctamente.';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusMsg.textContent = 'Error al enviar la URL.';
+                });
+
+            }, 500); // Espera 500ms después de la última tecla antes de enviar
+        });
+    </script>
+</body>
+</html>
