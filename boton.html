@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botón Animado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 40px;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .animated-btn {
+            position: relative;
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #ff0000, #8b0000, #ff0000, #8b0000);
+            background-size: 300% 300%;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: gradient 3s ease infinite, pulse 2s infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .animated-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .animated-btn:hover::before {
+            left: 100%;
+        }
+
+        .animated-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .animated-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animación de pulso continuo */
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+            50% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 20px rgba(255, 0, 0, 0);
+            }
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .animated-btn {
+                padding: 15px 40px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .animated-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                letter-spacing: 1px;
+            }
+        }
+
+        /* Mensaje de click */
+        .message {
+            margin-top: 30px;
+            font-size: 20px;
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="btn-container">
+        <button class="animated-btn" onclick="handleClick()">
+            Click Aquí
+        </button>
+        <div class="message" id="message">¡Abriendo nueva pestaña! 🎉</div>
+    </div>
+
+    <script>
+        function handleClick() {
+            // Abre una nueva pestaña con la URL especificada
+            window.open('https://www.effectivegatecpm.com/cywpa8vtr?key=c90534bec179e0add695ffe8d7174cbe', '_blank');
+            
+            const message = document.getElementById('message');
+            message.classList.add('show');
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
